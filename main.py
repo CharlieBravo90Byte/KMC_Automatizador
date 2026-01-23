@@ -23,7 +23,7 @@ def main():
     logger.info(f"Empresa: {TRANSBANK_EMPRESA}")
     
     # Crear instancia del bot
-    bot = TransbankBot(headless=False)  # Cambiar a True para modo sin interfaz
+    bot = TransbankBot(headless=False)  # Cambiar a visible para evitar crashes
     
     # Configurar parámetros de búsqueda
     # Ejemplo: buscar documentos de enero 2026

@@ -6,10 +6,15 @@ Selectores CSS e IDs de elementos HTML del portal de Transbank
 # LOGIN PAGE
 # ============================================
 class LoginSelectors:
-    RUT_INPUT = 'rutPersona'
-    PASSWORD_INPUT = 'password'
-    LOGIN_BUTTON = 'button.btn-primary'
-    ERROR_MESSAGE = '.form-validator-stack'
+    RUT_INPUT = '_LoginWebPortlet_username'
+    PASSWORD_INPUT = '_LoginWebPortlet_contrasena'
+    LOGIN_BUTTON = '#_LoginWebPortlet_btnIngresar'
+    ERROR_MESSAGE = '#_LoginWebPortlet_wrongUserOrPass'
+    # Elementos de bloqueo comunes
+    POPUP_MODAL = '.modal, #modal, [role="dialog"]'
+    CLOSE_BUTTON = '.close, .btn-close, [aria-label="close"], [aria-label="Close"]'
+    LOADING_OVERLAY = '.loading, .overlay, .spinner'
+    COOKIE_BANNER = '[class*="cookie"], [id*="cookie"], [class*="gdpr"]'
 
 # ============================================
 # MODAL DE SELECCIÓN DE EMPRESA
@@ -26,7 +31,13 @@ class EmpresaSelectors:
 class DashboardSelectors:
     MENU_LATERAL = 'nav'
     DOCUMENTOS_LINK = 'a[href*="documentos-electronicos"]'
+    
+    # Selector de empresa en dashboard
     EMPRESA_ACTUAL = '.change_sessions'
+    EMPRESA_NOMBRE_DISPLAY = 'span[nombredisplay]'
+    EMPRESA_DROPDOWN_BUTTON = 'button.org-tbk'
+    EMPRESA_LISTA = 'ul.list-org'
+    EMPRESA_ITEM = 'li[data-org-rut]'
 
 # ============================================
 # DOCUMENTOS ELECTRÓNICOS (IFRAME)

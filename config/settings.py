@@ -22,9 +22,10 @@ HEADLESS = False  # Cambiar a True para ejecución sin interfaz gráfica
 DOWNLOAD_PATH = os.path.join(os.getcwd(), 'downloads')
 
 # Tiempos de espera (segundos)
-WAIT_SHORT = 3
-WAIT_MEDIUM = 5
-WAIT_LONG = 10
+WAIT_SHORT = 5
+WAIT_MEDIUM = 10
+WAIT_LONG = 20
+WAIT_CRITICAL = 30  # Para elementos críticos como login
 WAIT_DOWNLOAD = 30
 
 # Crear carpeta de descargas si no existe

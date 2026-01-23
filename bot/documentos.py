@@ -20,23 +20,26 @@ class DocumentosElectronicos:
         logger.info("Navegando a 'Documentos Electrónicos'...")
         
         try:
-            # Buscar y hacer click en el link de Documentos Electrónicos
-            link = wait_and_find(
-                self.driver, 
-                By.CSS_SELECTOR, 
-                DashboardSelectors.DOCUMENTOS_LINK,
-                timeout=10
-            )
-            link.click()
-            logger.info("Click en 'Documentos Electrónicos'")
+            # SOLUCIÓN DIRECTA: Navegar a la URL conocida sin buscar
+            # La URL de documentos electrónicos sigue un patrón conocido
+            base_url = self.driver.current_url
             
-            time.sleep(WAIT_MEDIUM)
-            
-            logger.info("✅ Navegación exitosa")
-            return True
+            # Si estamos en el dashboard (portal-3.0), agregar la ruta de documentos
+            if "portal-3.0" in base_url:
+                # Construir URL directa
+                doc_url = base_url.split("/portal")[0] + "/group/portal-3.0/documentos-electronicos"
+                logger.info(f"Navegando directamente a: {doc_url}")
+                self.driver.get(doc_url)
+                time.sleep(5)
+                logger.info(f"📍 URL actual: {self.driver.current_url}")
+                logger.info("✅ Navegación exitosa - DEBERÍAS VER LA PÁGINA DE DOCUMENTOS")
+                return True
+            else:
+                logger.error(f"❌ URL inesperada: {base_url}")
+                return False
             
         except Exception as e:
-            logger.error(f"❌ Error navegando a documentos: {e}")
+            logger.error(f"❌ Error navegando: {e}")
             return False
     
     def cambiar_a_iframe(self):
@@ -46,19 +49,48 @@ class DocumentosElectronicos:
         logger.info("Cambiando contexto al iframe...")
         
         try:
-            # Esperar a que el iframe esté presente
-            iframe = wait_and_find(
-                self.driver, 
-                By.ID, 
-                DocumentosSelectors.IFRAME_ID,
-                timeout=10
-            )
+            # Buscar TODOS los iframes
+            all_iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
+            logger.info(f"🔍 Total de iframes encontrados: {len(all_iframes)}")
+            
+            # Listar información de todos los iframes
+            for i, frame in enumerate(all_iframes):
+                try:
+                    frame_id = frame.get_attribute("id") or "sin ID"
+                    frame_name = frame.get_attribute("name") or "sin name"
+                    frame_src = frame.get_attribute("src") or "sin src"
+                    logger.info(f"   IFRAME #{i+1}: ID={frame_id}, NAME={frame_name}")
+                except Exception as e:
+                    logger.info(f"   IFRAME #{i+1}: Error obteniendo datos - {e}")
+            
+            # Intentar con el ID conocido
+            logger.info(f"Buscando iframe con ID: {DocumentosSelectors.IFRAME_ID}")
+            iframe = None
+            try:
+                iframe = self.driver.find_element(By.ID, DocumentosSelectors.IFRAME_ID)
+                logger.info("✅ Iframe encontrado con ID conocido")
+            except:
+                logger.warning("⚠️ No se encontró iframe con ID conocido")
+                
+                # Intentar con el primer iframe disponible
+                if all_iframes:
+                    logger.info("Intentando con el primer iframe disponible...")
+                    iframe = all_iframes[0]
+                else:
+                    logger.error("❌ No hay iframes disponibles")
+                    return False
             
             # Cambiar al contexto del iframe
             self.driver.switch_to.frame(iframe)
             logger.info("✅ Contexto cambiado al iframe")
             
-            time.sleep(2)
+            logger.info("Esperando que cargue contenido del iframe...")
+            time.sleep(3)  # Pausa para ver el iframe
+            
+            logger.info("✅ Iframe cargado - DEBERÍAS VER EL FORMULARIO DE BÚSQUEDA")
+            return True
+            logger.info("📸 Captura: iframe_2_dentro.png")
+            
             return True
             
         except Exception as e:
